@@ -1,0 +1,69 @@
+"""
+CODTECH Data Science Internship
+Task 4: Optimization Project
+
+Project: Resource Allocation using Linear Programming
+Tools: PuLP, Matplotlib
+Author: Shamim Akthar
+"""
+
+# -----------------------------
+# Import libraries
+# -----------------------------
+import pulp
+import matplotlib.pyplot as plt
+
+# -----------------------------
+# Step 1: Define the problem
+# -----------------------------
+# Example: maximize profit from two products (A and B)
+# Constraints: limited resources
+
+model = pulp.LpProblem("Maximize_Profit", pulp.LpMaximize)
+
+# Decision variables
+x = pulp.LpVariable('Product_A', lowBound=0, cat='Continuous')
+y = pulp.LpVariable('Product_B', lowBound=0, cat='Continuous')
+
+# Objective function (profit)
+model += 20 * x + 30 * y, "Total_Profit"
+
+# Constraints
+model += 2 * x + y <= 100   # Resource 1
+model += x + 2 * y <= 80    # Resource 2
+
+# -----------------------------
+# Step 2: Solve the problem
+# -----------------------------
+model.solve()
+
+print("Status:", pulp.LpStatus[model.status])
+print("Optimal Production of Product A:", x.varValue)
+print("Optimal Production of Product B:", y.varValue)
+print("Maximum Profit:", pulp.value(model.objective))
+
+# -----------------------------
+# Step 3: Visualization
+# -----------------------------
+import numpy as np
+
+# Plot feasible region
+x_vals = np.linspace(0, 60, 200)
+y1 = 100 - 2*x_vals
+y2 = (80 - x_vals)/2
+
+plt.plot(x_vals, y1, label="2A + B <= 100")
+plt.plot(x_vals, y2, label="A + 2B <= 80")
+
+plt.fill_between(x_vals, np.minimum(y1, y2), 0, alpha=0.3, color='lightblue')
+
+# Mark optimal point
+plt.plot(x.varValue, y.varValue, 'ro', label="Optimal Solution")
+
+plt.xlabel("Product A")
+plt.ylabel("Product B")
+plt.title("Feasible Region and Optimal Solution")
+plt.legend()
+plt.show()
+
+print("Task 4 Completed Successfully ")
