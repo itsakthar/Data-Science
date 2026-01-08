@@ -83,4 +83,51 @@ plt.title('Training vs Validation Accuracy')
 plt.legend()
 plt.show()
 
-print("Task 2 finished successfully!")
+#visualizations of results
+# =========================
+# Save the trained model
+# =========================
+model.save("mnist_cnn_model.h5")
+
+# =========================
+# Plot Accuracy
+# =========================
+import matplotlib.pyplot as plt
+
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.title('Model Accuracy')
+plt.legend()
+plt.show()
+
+# =========================
+# Plot Loss
+# =========================
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Model Loss')
+plt.legend()
+plt.show()
+
+# =========================
+# Sample Predictions (Optional)
+# =========================
+import numpy as np
+
+# Pick 5 random test samples
+indices = np.random.choice(len(X_test), 5)
+sample_images = X_test[indices]
+sample_labels = y_test[indices]
+
+predictions = model.predict(sample_images)
+
+for i in range(5):
+    plt.imshow(sample_images[i].reshape(28,28), cmap='gray')
+    plt.title(f"True: {sample_labels[i]}, Predicted: {np.argmax(predictions[i])}")
+    plt.axis('off')
+    plt.show()
+print("Task 2 completed")
